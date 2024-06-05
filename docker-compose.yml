@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: dev-db
+    ports:
+      - "5432:5432"  
+    environment:
+      POSTGRES_DB: dev-db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # Persist PostgreSQL data
+
+  evaluation-api:
+    build: 
+      context: .
+      dockerfile: Dockerfile  # Path to your Dockerfile for the Express app
+    container_name: evaluation-api
+    command: yarn dev
+    ports:
+      - "3000:3000"  # Map container port 3000 to host port 3000
+    depends_on:
+      - postgres  # Wait for PostgreSQL to be ready before starting Express
+    environment:
+      DATABASE_URL: postgres://user:password@postgres:5432/dev-db  # Connection URL for Express app
+      NODE_ENV: development
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src/
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: /src
+volumes:
+  postgres-data:
