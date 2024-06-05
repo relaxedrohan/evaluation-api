@@ -9,8 +9,7 @@ try {
     validateEnvConfig(process.env)
     console.log('Environment configuration is valid')
 
-    const app: Application = 
-    express()
+    const app: Application = express()
     const port = envConfig.PORT || 8000
 
     app.get('/', (req: Request, res: Response) => {
