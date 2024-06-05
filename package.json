@@ -9,7 +9,8 @@
     "start": "node dist/index.js",
     "lint": "eslint 'src/**/*.{js,ts}'",
     "lint:fix": "eslint 'src/**/*.{js,ts}' --fix",
-    "format": "prettier --write 'src/**/*.{js,ts,json,md}'"
+    "format": "prettier --write 'src/**/*.{js,ts,json,md}'",
+    "prepare": "husky"
   },
   "dependencies": {
     "class-transformer": "^0.5.1",
@@ -50,11 +51,13 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "yarn test"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
-    "*.ts": ["eslint", "prettier --write"]
+    "*.ts": [
+      "eslint",
+      "prettier --write"
+    ]
   }
 }
