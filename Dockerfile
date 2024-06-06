@@ -20,4 +20,5 @@ RUN yarn build
 EXPOSE 3000
 
 # Command to run the application
-CMD ["yarn", "dev"]
+# Push Prisma schema to database
+CMD ["sh", "-c", "yarn prisma db push && yarn dev"]

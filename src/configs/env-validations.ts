@@ -1,28 +1,25 @@
-import { IsString, IsNumber, validateSync } from 'class-validator'
+import { IsString, IsNumber, validateSync, IsEnum } from 'class-validator'
 import { plainToInstance } from 'class-transformer'
+import { NodeEnvironment } from './config.enum'
 
 export class EnvValidation {
-    @IsString()
-    NODE_ENV!: string
+    @IsEnum(NodeEnvironment)
+    NODE_ENV!: NodeEnvironment
 
     @IsNumber()
     PORT!: number
 
-    //   @IsString()
-    //   DB_HOST!: string;
+    @IsString()
+    POSTGRES_URL!: string
 
-    //   @IsInt()
-    //   DB_PORT!: number;
+    @IsString()
+    POSTGRES_USER!: string
 
-    //   @IsString()
-    //   DB_USER!: string;
+    @IsString()
+    POSTGRES_PASSWORD!: string
 
-    //   @IsString()
-    //   DB_PASS!: string;
-
-    //   @IsOptional()
-    //   @IsString()
-    //   DB_NAME!: string;
+    @IsString()
+    POSTGRES_NAME!: string
 }
 
 export function validateEnvConfig(config: Record<string, unknown>) {

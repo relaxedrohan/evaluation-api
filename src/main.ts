@@ -1,8 +1,10 @@
 import 'reflect-metadata'
 import express, { Request, Response, Application } from 'express'
 import * as dotenv from 'dotenv'
-import { validateEnvConfig } from './configs/env'
-import { envConfig } from './configs/config'
+import { validateEnvConfig } from './configs/env-validations'
+import { config } from './configs/config'
+import accountsRouters from './modules/account/account.routes'
+
 dotenv.config()
 
 try {
@@ -10,7 +12,13 @@ try {
     console.log('Environment configuration is valid')
 
     const app: Application = express()
-    const port = envConfig.PORT || 8000
+    const port = config.PORT || 8000
+
+    app.use(express.json())
+    app.use(express.text())
+    app.use(express.urlencoded({ extended: false }))
+
+    app.use('/account', accountsRouters)
 
     app.get('/', (req: Request, res: Response) => {
         res.send('Backend Developer Task')
