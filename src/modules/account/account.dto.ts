@@ -19,7 +19,7 @@ export class CreateAccountDto {
     @IsNotEmpty()
     @IsString()
     @Length(8, 16)
-    phone!: string
+    phone!: number
 
     @IsNotEmpty()
     @IsString()

@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import * as accountService from './account.service'
 import { CreateAccountDto } from './account.dto'
+import { validateDto } from '../../common/middlewares/validate-dto'
 const accountsRouters = express.Router()
 
 accountsRouters.get('/', async (req: Request, res: Response) => {
@@ -12,7 +13,7 @@ accountsRouters.get('/', async (req: Request, res: Response) => {
     }
 })
 
-accountsRouters.post('/', async (req: Request, res: Response) => {
+accountsRouters.post('/', validateDto(CreateAccountDto), async (req: Request, res: Response) => {
     try {
         const createAccountBody: CreateAccountDto = req.body
         const account = await accountService.createAccountService(createAccountBody)
