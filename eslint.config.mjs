@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint'
 
 export default [
     {
-        files: ['**/*.js'],
+        files: ['**/*.js', '**/*.ts'],
         languageOptions: { sourceType: 'script' },
     },
     {

@@ -2,12 +2,13 @@ import { sendEmailJob } from '../queues/jobs/send-email.job'
 import { config } from './config'
 import { QueueConfig } from './config.type'
 
+const { REDIS_PORT, REDIS_HOST } = config
 export const queueConfig: QueueConfig = {
     SendEmails: {
         options: {
             connection: {
-                host: config.REDIS_HOST,
-                port: config.REDIS_PORT,
+                host: REDIS_HOST,
+                port: REDIS_PORT,
             },
             defaultJobOptions: {
                 attempts: 3,

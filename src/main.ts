@@ -7,31 +7,36 @@ import TokenGeneratorRouter from './modules/backendFriendly/backendFriendly.rout
 import { createQueues } from './queues'
 import { processQueues } from './queues/consumer'
 
-try {
-    validateEnvConfig(process.env)
-    console.log('Environment configuration is valid')
+export default function startServer() {
+    try {
+        validateEnvConfig(process.env)
+        console.log('Environment configuration is valid')
 
-    const app: Application = express()
-    const port = config.PORT || 8000
+        const app: Application = express()
+        const port = config.PORT || 8000
 
-    app.use(express.json())
-    app.use(express.text())
-    app.use(express.urlencoded({ extended: false }))
-    app.use('/generateToken', TokenGeneratorRouter)
+        app.use(express.json())
+        app.use(express.text())
+        app.use(express.urlencoded({ extended: false }))
+        app.use('/generateToken', TokenGeneratorRouter)
 
-    app.use('/account', accountsRouters)
+        app.use('/account', accountsRouters)
 
-    app.get('/', (req: Request, res: Response) => {
-        res.send('Backend Developer Task')
-    })
+        app.get('/', (req: Request, res: Response) => {
+            res.send('Backend Developer Task')
+        })
 
-    createQueues()
-    processQueues()
+        createQueues()
+        processQueues()
 
-    app.listen(port, () => {
-        console.log(`Server is Fire at http://localhost:${port}`)
-    })
-} catch (error) {
-    console.error('Error Starting up the servers', error)
-    process.exit(1) // Exit the application with an error code
+        app.listen(port, () => {
+            console.info(`connected to ${config.NODE_ENV} db`)
+            console.info(`${config.NODE_ENV} Server is Fire at http://localhost:${port}`)
+        })
+    } catch (error) {
+        console.error('Error Starting up the servers', error)
+        process.exit(1) // Exit the application with an error code
+    }
 }
+
+startServer()

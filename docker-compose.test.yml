@@ -3,21 +3,18 @@ version: '3.8'
 services:
     postgres:
         image: postgres:latest
-        container_name: dev-db
+        container_name: test-db
         ports:
             - '5432:5432'
         environment:
-            POSTGRES_DB: dev-db
+            POSTGRES_DB: test-db
             POSTGRES_USER: user
             POSTGRES_PASSWORD: password
-        volumes:
-            - postgres-data:/var/lib/postgresql/data
         networks:
             - network
-
     redis:
         image: redis:latest
-        container_name: dev-redis
+        container_name: test-redis
         ports:
             - '6379:6379'
         networks:
@@ -25,7 +22,7 @@ services:
 
     pgadmin:
         image: dpage/pgadmin4
-        container_name: dev-pgadmin4
+        container_name: test-pgadmin4
         environment:
             PGADMIN_DEFAULT_EMAIL: admin@admin.com
             PGADMIN_DEFAULT_PASSWORD: admin
@@ -36,18 +33,19 @@ services:
         networks:
             - network
 
-    evaluation-api:
+    evaluation-test-api:
         build:
             context: .
             dockerfile: Dockerfile
-        container_name: evaluation-api
+        container_name: evaluation-test-api
         ports:
             - '3000:3000'
         depends_on:
             - postgres
+            - redis
         environment:
-            POSTGRES_URL: postgres://user:password@postgres:5432/dev-db
-            NODE_ENV: development
+            POSTGRES_URL: postgres://user:password@postgres:5432/test-db
+            NODE_ENV: test
             REDIS_HOST: redis
             REDIS_PORT: 6379
         volumes:
