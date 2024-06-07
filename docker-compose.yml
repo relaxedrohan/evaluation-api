@@ -11,7 +11,15 @@ services:
             POSTGRES_USER: user
             POSTGRES_PASSWORD: password
         volumes:
-            - postgres-data:/var/lib/postgresql/data # Persist PostgreSQL data
+            - postgres-data:/var/lib/postgresql/data
+        networks:
+            - my-network
+
+    redis:
+        image: redis:latest
+        container_name: redis
+        ports:
+            - '6379:6379'
         networks:
             - my-network
 
@@ -28,12 +36,12 @@ services:
     evaluation-api:
         build:
             context: .
-            dockerfile: Dockerfile # Path to your Dockerfile for the Express app
+            dockerfile: Dockerfile
         container_name: evaluation-api
         ports:
-            - '3000:3000' # Map container port 3000 to host port 3000
+            - '3000:3000'
         depends_on:
-            - postgres # Wait for PostgreSQL to be ready before starting Express
+            - postgres
         environment:
             POSTGRES_URL: postgres://user:password@postgres:5432/dev-db
             NODE_ENV: development

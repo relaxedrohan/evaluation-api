@@ -9,12 +9,21 @@ import { Account } from '@prisma/client'
 import { CreateAccountDto, DeleteAccountResponse } from './account.dto'
 import { handlePrismaError } from '../../common/errors/database-error/prisma-error-mapper'
 import { ErrorResponse } from '../../common/errors/http-error/error.type'
+import { config } from '../../configs/config'
+import { addJobToQueue } from '../../queues/producers/producer'
 
 export const createAccountService = async (
     createAccountBody: CreateAccountDto
 ): Promise<Account | ErrorResponse> => {
     try {
-        return await createAccount(createAccountBody)
+        const account = await createAccount(createAccountBody)
+        const sendEmailPayload = {
+            email: config.ADMIN_USER_EMAIL,
+            username: account.email,
+            phone: account.phone,
+        }
+        await addJobToQueue('sendEmail', 'account-creation:', { sendEmailPayload })
+        return account
     } catch (error: any) {
         return handlePrismaError(error)
     }
@@ -28,7 +37,7 @@ export const getAccountsService = async () => {
     }
 }
 
-// todo:will add return type above later.
+// todo add return type above .
 
 export const getAccountByIdService = async (
     id: string

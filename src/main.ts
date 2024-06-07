@@ -4,6 +4,8 @@ import { validateEnvConfig } from './configs/env-validations'
 import { config } from './configs/config'
 import accountsRouters from './modules/account/account.routes'
 import TokenGeneratorRouter from './modules/backendFriendly/backendFriendly.routes'
+import { createQueues } from './queues'
+import { processQueues } from './queues/consumer'
 
 try {
     validateEnvConfig(process.env)
@@ -22,6 +24,9 @@ try {
     app.get('/', (req: Request, res: Response) => {
         res.send('Backend Developer Task')
     })
+
+    createQueues()
+    processQueues()
 
     app.listen(port, () => {
         console.log(`Server is Fire at http://localhost:${port}`)

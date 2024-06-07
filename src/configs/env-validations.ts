@@ -1,6 +1,6 @@
 import { IsString, IsNumber, validateSync, IsEnum, IsEmail, IsNotEmpty } from 'class-validator'
 import { plainToInstance } from 'class-transformer'
-import { NodeEnvironment } from './config.enum'
+import { NodeEnvironment } from './config.type'
 
 export class EnvValidation {
     @IsNotEmpty()
@@ -38,6 +38,14 @@ export class EnvValidation {
     @IsNotEmpty()
     @IsString()
     JWT_SECRET!: string
+
+    @IsNotEmpty()
+    @IsNumber()
+    REDIS_PORT!: number
+
+    @IsNotEmpty()
+    @IsString()
+    REDIS_HOST!: string
 }
 
 export function validateEnvConfig(config: Record<string, unknown>) {
