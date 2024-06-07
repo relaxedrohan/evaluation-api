@@ -34,9 +34,14 @@ export const createAccountService = async (
     }
 }
 
-export const getAccountsService = async () => {
+export const getAccountsService = async (
+    page: number,
+    pageSize: number,
+    sortBy: string,
+    sortOrder: string
+) => {
     try {
-        return await getAccounts()
+        return await getAccounts(page, pageSize, sortBy, sortOrder)
     } catch (error: any) {
         return handleServiceError(error)
     }

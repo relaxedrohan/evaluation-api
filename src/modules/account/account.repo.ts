@@ -34,9 +34,20 @@ export async function createAccount({
     }
 }
 
-export async function getAccounts() {
+export async function getAccounts(
+    page: number,
+    pageSize: number,
+    sortBy: string,
+    sortOrder: string
+) {
     try {
-        const accounts = await db.account.findMany({})
+        const accounts = await db.account.findMany({
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            orderBy: {
+                [sortBy]: sortOrder as 'asc' | 'desc',
+            },
+        })
         return accounts
     } catch (error: any) {
         return handlePrismaError(error)

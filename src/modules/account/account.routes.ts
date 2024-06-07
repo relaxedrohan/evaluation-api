@@ -1,29 +1,53 @@
 import express, { Request, Response } from 'express'
 import * as accountService from './account.service'
-import { CreateAccountDto } from './account.dto'
-import { validateDto } from '../../common/middlewares/validate-dto'
+import { CreateAccountDto, PaginationQueryParams } from './account.dto'
+import { validateBodyDto } from '../../common/middlewares/validate-body-dto.middleware'
 import { UserRoles } from '@prisma/client'
 import { authorizeToken } from '../../middlewares/authorizeToken'
+import {
+    validatePaginationParams,
+    validateSortParams,
+} from '../../common/utils/pagination-query-validator'
+
 const accountsRouters = express.Router()
 
-accountsRouters.get('/', async (req: Request, res: Response) => {
+accountsRouters.get('/', authorizeToken(UserRoles.ADMIN), async (req: Request, res: Response) => {
     try {
-        const accounts = await accountService.getAccountsService()
+        const {
+            page = 1,
+            pageSize = 10,
+            sortBy = 'created_at',
+            sortOrder = 'desc',
+        }: PaginationQueryParams = req.query
+
+        validatePaginationParams(page, pageSize)
+        validateSortParams(sortBy, sortOrder)
+
+        const accounts = await accountService.getAccountsService(
+            +page,
+            +pageSize,
+            sortBy as string,
+            sortOrder as string
+        )
         res.json(accounts)
     } catch (error: any) {
         res.status(500).json({ message: error.message })
     }
 })
 
-accountsRouters.post('/', validateDto(CreateAccountDto), async (req: Request, res: Response) => {
-    try {
-        const createAccountBody: CreateAccountDto = req.body
-        const account = await accountService.createAccountService(createAccountBody)
-        res.json(account)
-    } catch (error: any) {
-        res.status(500).json({ message: error.message })
+accountsRouters.post(
+    '/',
+    validateBodyDto(CreateAccountDto),
+    async (req: Request, res: Response) => {
+        try {
+            const createAccountBody: CreateAccountDto = req.body
+            const account = await accountService.createAccountService(createAccountBody)
+            res.json(account)
+        } catch (error: any) {
+            res.status(500).json({ message: error.message })
+        }
     }
-})
+)
 
 // GET /users/:id
 accountsRouters.get('/:id', async (req: Request, res: Response) => {

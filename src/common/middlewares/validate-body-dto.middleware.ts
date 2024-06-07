@@ -3,7 +3,7 @@ import { plainToInstance } from 'class-transformer'
 import { validate } from 'class-validator'
 import { Request, Response, NextFunction } from 'express'
 
-export function validateDto(dtoClass: any) {
+export function validateBodyDto(dtoClass: any) {
     return async (req: Request, res: Response, next: NextFunction) => {
         const dtoObject = plainToInstance(dtoClass, req.body)
         const errors = await validate(dtoObject)

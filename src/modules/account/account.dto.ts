@@ -6,6 +6,9 @@ import {
     IsOptional,
     IsString,
     Length,
+    IsInt,
+    Max,
+    Min,
 } from 'class-validator'
 
 export class CreateAccountDto {
@@ -78,4 +81,25 @@ export interface PaginatedAccountsRequest extends Request {
 export class DeleteAccountResponse {
     @IsBoolean()
     isDeleted!: boolean
+}
+
+export class PaginationQueryParams {
+    @IsInt()
+    @IsOptional()
+    @Min(1)
+    page?: number
+
+    @IsInt()
+    @IsOptional()
+    @Min(1)
+    @Max(100)
+    pageSize?: number
+
+    @IsString()
+    @IsOptional()
+    sortBy?: string
+
+    @IsString()
+    @IsOptional()
+    sortOrder?: 'asc' | 'desc'
 }
