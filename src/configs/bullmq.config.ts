@@ -9,10 +9,16 @@ export const queueConfig: QueueConfig = {
                 host: config.REDIS_HOST,
                 port: config.REDIS_PORT,
             },
-            prefix: 'account-creation:',
+            defaultJobOptions: {
+                attempts: 3,
+                backoff: {
+                    type: 'exponential',
+                    delay: 5000,
+                },
+            },
         },
         handlers: {
-            sendEmail: sendEmailJob,
+            'account-creation': sendEmailJob,
         },
     },
 }

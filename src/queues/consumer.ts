@@ -1,16 +1,17 @@
 import { queueConfig } from '../configs/bullmq.config'
-import { queues } from './index'
-import { Worker, Job } from 'bullmq'
+import { Worker } from 'bullmq'
 
 export function processQueues() {
     for (const [queueName, { handlers }] of Object.entries(queueConfig)) {
-        const queue = queues[queueName]
-        if (!queue) {
-            throw new Error(`Queue "${queueName}" not found`)
-        }
-        for (const [, handler] of Object.entries(handlers)) {
-            const jobHandler = handler as (job: Job) => Promise<void>
-            new Worker(queueName, jobHandler, { connection: queue.opts.connection })
+        for (const [jobName, handler] of Object.entries(handlers)) {
+            new Worker(queueName, handler, {
+                connection: {
+                    host: process.env.REDIS_HOST,
+                    port: Number(process.env.REDIS_PORT),
+                },
+            })
+
+            console.info(`Worker registered for job ${jobName} in queue ${queueName}}`)
         }
     }
 }

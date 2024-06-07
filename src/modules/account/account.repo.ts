@@ -15,7 +15,7 @@ export async function createAccount({
     phone,
     password,
     birthday,
-}: CreateAccountDto): Promise<Account> {
+}: CreateAccountDto): Promise<Account | ErrorResponse> {
     const data: Prisma.AccountCreateInput = {
         first_name: firstName,
         last_name: lastName,
@@ -24,23 +24,35 @@ export async function createAccount({
         password,
         birthday,
     }
-    const user = await db.account.create({
-        data,
-    })
-    return user
+    try {
+        const user = await db.account.create({
+            data,
+        })
+        return user
+    } catch (error: any) {
+        return handlePrismaError(error)
+    }
 }
 
 export async function getAccounts() {
-    const accounts = await db.account.findMany({})
-    return accounts
+    try {
+        const accounts = await db.account.findMany({})
+        return accounts
+    } catch (error: any) {
+        return handlePrismaError(error)
+    }
 }
 
 export async function getAccount(id: string) {
     const where: Prisma.AccountWhereUniqueInput = {
         id,
     }
-    const user = await db.account.findFirst({ where })
-    return user
+    try {
+        const user = await db.account.findFirst({ where })
+        return user
+    } catch (error: any) {
+        return handlePrismaError(error)
+    }
 }
 
 export async function updateAccount(

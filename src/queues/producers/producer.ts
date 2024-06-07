@@ -1,9 +1,15 @@
 import { queues } from '..'
 
-export function addJobToQueue(queueName: string, jobName: string, data: any) {
+export async function addJobToQueue(queueName: string, jobName: string, data: any): Promise<void> {
     const queue = queues[queueName]
-    if (!queue) {
-        throw new Error(`Queue "${queueName}" not found`)
+    if (queue) {
+        await queue.add(jobName, data)
+        console.info(
+            `Added job ${jobName} to queue ${queueName} with data: ${JSON.stringify(data)}`
+        )
+    } else {
+        const errorMessage = `Queue ${queueName} not found.`
+        console.error(errorMessage)
+        throw new Error(errorMessage)
     }
-    return queue.add(jobName, data)
 }

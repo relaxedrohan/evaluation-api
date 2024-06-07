@@ -7,25 +7,30 @@ import {
 } from './account.repo'
 import { Account } from '@prisma/client'
 import { CreateAccountDto, DeleteAccountResponse } from './account.dto'
-import { handlePrismaError } from '../../common/errors/database-error/prisma-error-mapper'
 import { ErrorResponse } from '../../common/errors/http-error/error.type'
 import { config } from '../../configs/config'
 import { addJobToQueue } from '../../queues/producers/producer'
+import { handleServiceError } from '../../common/errors/http-error/internal-server-error'
 
 export const createAccountService = async (
     createAccountBody: CreateAccountDto
 ): Promise<Account | ErrorResponse> => {
     try {
         const account = await createAccount(createAccountBody)
-        const sendEmailPayload = {
-            email: config.ADMIN_USER_EMAIL,
-            username: account.email,
-            phone: account.phone,
+        if ('error' in account) {
+            // Handle the error case
+            return account
+        } else {
+            const sendEmailPayload = {
+                email: config.ADMIN_USER_EMAIL,
+                username: account.email,
+                phone: account.phone,
+            }
+            await addJobToQueue('SendEmails', 'account-creation', sendEmailPayload)
+            return account
         }
-        await addJobToQueue('sendEmail', 'account-creation:', { sendEmailPayload })
-        return account
     } catch (error: any) {
-        return handlePrismaError(error)
+        return handleServiceError(error)
     }
 }
 
@@ -33,7 +38,7 @@ export const getAccountsService = async () => {
     try {
         return await getAccounts()
     } catch (error: any) {
-        return handlePrismaError(error)
+        return handleServiceError(error)
     }
 }
 
@@ -45,7 +50,7 @@ export const getAccountByIdService = async (
     try {
         return await getAccount(id)
     } catch (error: any) {
-        return handlePrismaError(error)
+        return handleServiceError(error)
     }
 }
 
@@ -56,7 +61,7 @@ export const updateAccountService = async (
     try {
         return await updateAccount(id, data)
     } catch (error: any) {
-        return handlePrismaError(error)
+        return handleServiceError(error)
     }
 }
 
@@ -66,6 +71,6 @@ export const deleteAccountService = async (
     try {
         return await deleteAccount(id)
     } catch (error: any) {
-        return handlePrismaError(error)
+        return handleServiceError(error)
     }
 }
