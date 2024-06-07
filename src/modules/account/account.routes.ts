@@ -50,30 +50,38 @@ accountsRouters.post(
 )
 
 // GET /users/:id
-accountsRouters.get('/:id', async (req: Request, res: Response) => {
-    try {
-        const accountId = req.params.id
-        const account = await accountService.getAccountByIdService(accountId)
-        res.json(account)
-    } catch (error: any) {
-        res.status(500).json({ message: error.message })
+accountsRouters.get(
+    '/:id',
+    authorizeToken(UserRoles.ADMIN, UserRoles.USER),
+    async (req: Request, res: Response) => {
+        try {
+            const accountId = req.params.id
+            const account = await accountService.getAccountByIdService(accountId)
+            res.json(account)
+        } catch (error: any) {
+            res.status(500).json({ message: error.message })
+        }
     }
-})
+)
 
 // PUT /users/:id
-accountsRouters.put('/:id', async (req: Request, res: Response) => {
-    try {
-        const accountId = req.params.id
-        const updateAccountBody = req.body
-        const updatedAccount = await accountService.updateAccountService(
-            accountId,
-            updateAccountBody
-        )
-        res.json(updatedAccount)
-    } catch (error: any) {
-        res.status(500).json({ message: error.message })
+accountsRouters.put(
+    '/:id',
+    authorizeToken(UserRoles.ADMIN, UserRoles.USER),
+    async (req: Request, res: Response) => {
+        try {
+            const accountId = req.params.id
+            const updateAccountBody = req.body
+            const updatedAccount = await accountService.updateAccountService(
+                accountId,
+                updateAccountBody
+            )
+            res.json(updatedAccount)
+        } catch (error: any) {
+            res.status(500).json({ message: error.message })
+        }
     }
-})
+)
 
 // DELETE /users/:id
 accountsRouters.delete(

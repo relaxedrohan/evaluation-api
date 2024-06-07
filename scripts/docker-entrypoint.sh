@@ -12,7 +12,7 @@ npx prisma migrate deploy
 
 # Run the populate-admin-user.ts script
 echo "Populating admin user..."
-npx ts-node src/scripts/populate-admin-user.ts || { echo 'Populating admin user failed' ; exit 1; }
+npx ts-node scripts/populate-admin-user.ts || { echo 'Populating admin user failed' ; exit 1; }
 
 # Start the application
 echo "Starting the application..."

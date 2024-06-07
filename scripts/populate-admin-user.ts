@@ -1,5 +1,5 @@
 import { PrismaClient, UserRoles } from '@prisma/client'
-import { config } from '../configs/config'
+import { config } from '../src/configs/config'
 
 const prisma = new PrismaClient()
 

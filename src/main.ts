@@ -32,6 +32,10 @@ export default function startServer() {
         app.listen(port, () => {
             console.info(`connected to ${config.NODE_ENV} db`)
             console.info(`${config.NODE_ENV} Server is Fire at http://localhost:${port}`)
+            // setInterval(() => {
+            //     const memoryUsage = process.memoryUsage()
+            //     console.log(`Memory Usage: ${JSON.stringify(memoryUsage, null, 2)}`)
+            // }, 10000)
         })
     } catch (error) {
         console.error('Error Starting up the servers', error)

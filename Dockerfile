@@ -13,13 +13,16 @@ RUN yarn
 # Copy the rest of the application code
 COPY . .
 
+# Generate prisma types
+RUN yarn db:generate
+
 # Build TypeScript source code
 RUN yarn build
 
-COPY src/scripts/docker-entrypoint.sh /app/src/scripts/docker-entrypoint.sh
-RUN chmod +x /app/src/scripts/docker-entrypoint.sh
+COPY /scripts/docker-entrypoint.sh /app/scripts/docker-entrypoint.sh
+RUN chmod +x /app/scripts/docker-entrypoint.sh
 
 # Expose the port your app runs on
 EXPOSE 3000
 
-CMD ["sh", "/app/src/scripts/docker-entrypoint.sh"]
+CMD ["sh", "/app/scripts/docker-entrypoint.sh"]
