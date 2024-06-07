@@ -22,11 +22,13 @@
         "prisma:db:push": "prisma db push",
         "prisma:introspect": "prisma introspect",
         "prisma:studio": "prisma studio",
-        "db:populate": "ts-node src/scripts/docker-entrypoint.sh"
+        "db:populate": "ts-node src/scripts/docker-entrypoint.sh",
+        "benchmark": "ts-node benchmark/benchmark.ts"
     },
     "dependencies": {
         "@prisma/client": "^5.15.0",
         "@types/bcrypt": "^5.0.2",
+        "autocannon": "^7.15.0",
         "axios": "^1.7.2",
         "bcrypt": "^5.1.1",
         "bullmq": "^5.7.15",
