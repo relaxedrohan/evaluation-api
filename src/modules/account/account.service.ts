@@ -6,55 +6,57 @@ import {
     updateAccount,
 } from './account.repo'
 import { Account } from '@prisma/client'
-import { DatabaseError } from '../../common/errors/database-error/database-error'
-import { CreateAccountDto } from './account.dto'
+import { CreateAccountDto, DeleteAccountResponse } from './account.dto'
+import { handlePrismaError } from '../../common/errors/database-error/prisma-error-mapper'
+import { ErrorResponse } from '../../common/errors/http-error/error.type'
 
 export const createAccountService = async (
     createAccountBody: CreateAccountDto
-): Promise<Account> => {
+): Promise<Account | ErrorResponse> => {
     try {
-        const account = await createAccount(createAccountBody)
-        return account
+        return await createAccount(createAccountBody)
     } catch (error: any) {
-        throw new DatabaseError(`Failed to create Account: ${error.message}`)
+        return handlePrismaError(error)
     }
 }
 
-export const getAccountsService = async (): Promise<Account[]> => {
+export const getAccountsService = async () => {
     try {
-        const account = await getAccounts()
-        return account
+        return await getAccounts()
     } catch (error: any) {
-        throw new DatabaseError(`Failed to fetch Accounts: ${error.message}`)
+        return handlePrismaError(error)
     }
 }
 
-export const getAccountByIdService = async (id: string): Promise<Account | null> => {
+// todo:will add return type above later.
+
+export const getAccountByIdService = async (
+    id: string
+): Promise<Account | ErrorResponse | null> => {
     try {
-        const account = await getAccount(id)
-        return account
+        return await getAccount(id)
     } catch (error: any) {
-        throw new DatabaseError(`Failed to fetch Account by ID: ${error.message}`)
+        return handlePrismaError(error)
     }
 }
 
 export const updateAccountService = async (
     id: string,
     data: Partial<Account>
-): Promise<Account | null> => {
+): Promise<Partial<Account> | ErrorResponse> => {
     try {
-        const account = await updateAccount(id, data)
-        return account
+        return await updateAccount(id, data)
     } catch (error: any) {
-        throw new DatabaseError(`Failed to update Account: ${error.message}`)
+        return handlePrismaError(error)
     }
 }
 
-export const deleteAccountService = async (id: string): Promise<Account | null> => {
+export const deleteAccountService = async (
+    id: string
+): Promise<DeleteAccountResponse | ErrorResponse> => {
     try {
-        const account = await deleteAccount(id)
-        return account
+        return await deleteAccount(id)
     } catch (error: any) {
-        throw new DatabaseError(`Failed to delete Account: ${error.message}`)
+        return handlePrismaError(error)
     }
 }

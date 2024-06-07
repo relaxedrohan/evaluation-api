@@ -16,9 +16,10 @@ COPY . .
 # Build TypeScript source code
 RUN yarn build
 
+COPY src/scripts/docker-entrypoint.sh /app/src/scripts/docker-entrypoint.sh
+RUN chmod +x /app/src/scripts/docker-entrypoint.sh
+
 # Expose the port your app runs on
 EXPOSE 3000
 
-# Command to run the application
-# Push Prisma schema to database
-CMD ["sh", "-c", "yarn prisma db push && yarn dev"]
+CMD ["sh", "/app/src/scripts/docker-entrypoint.sh"]

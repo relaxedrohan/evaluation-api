@@ -4,10 +4,11 @@ CREATE TABLE "account" (
     "first_name" VARCHAR(100) NOT NULL,
     "last_name" VARCHAR(100),
     "email" VARCHAR(100) NOT NULL,
-    "phone" INTEGER NOT NULL,
+    "phone" TEXT NOT NULL,
     "password" VARCHAR(50) NOT NULL,
     "birthday" TEXT,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+    "isAdmin" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "last_modified" TIMESTAMP(3) NOT NULL,
 

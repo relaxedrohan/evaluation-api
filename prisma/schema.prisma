@@ -15,15 +15,23 @@ datasource db {
 
 model Account {
   id            String   @id @default(uuid()) @db.Uuid
-  first_name    String   @db.VarChar(100)  // Account first name, Size: 100
-  last_name     String?   @db.VarChar(100)  // Account last name, Size: 100
-  email         String   @unique @db.VarChar(100)  // account email, Size: 100
-  phone         Int      @unique                  // phone number, Size: 16
-  password      String   @db.VarChar(50)   // Account password, Size: 50
-  birthday      String?                   // Account birth date, Format: “yyyy-mm-dd”
-  isDeleted     Boolean  @default(false)   // for Soft Deletion 
-  created_at    DateTime @default(now())   // Account creation date, Format: “yyyy-mm-dd hh:mm:ss”
-  last_modified DateTime @updatedAt        // Last account update date, Format: “yyyy-mm-dd hh:mm:ss”
+  first_name    String   @db.VarChar(100)             // Account first name, Size: 100
+  last_name     String?   @db.VarChar(100)            // Account last name, Size: 100
+  email         String   @unique @db.VarChar(100)     // account email, Size: 100
+  phone         String   @unique                      // phone number, Size: 16
+  password      String   @db.VarChar(50)              // Account password, Size: 50
+  birthday      String?                               // Account birth date, Format: “yyyy-mm-dd”
+  isDeleted     Boolean  @default(false)              // for Soft Deletion
+  userRole      UserRoles  @default(USER)              // user role, can remove default later
+  created_at    DateTime @default(now())     // Account creation date, Format: “yyyy-mm-dd hh:mm:ss”
+  last_modified DateTime @updatedAt          // Last account update date, Format: “yyyy-mm-dd hh:mm:ss”
 
   @@map("account")
+}
+
+// delete isAdmin
+
+enum UserRoles {
+  ADMIN
+  USER
 }

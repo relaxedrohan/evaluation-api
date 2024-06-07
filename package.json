@@ -6,8 +6,8 @@
     "scripts": {
         "build": "yarn db && tsc",
         "db": "yarn prisma generate",
-        "dev": "yarn db && nodemon src/main.ts",
-        "start": "yarn db && node dist/index.js",
+        "dev": "nodemon src/main.ts",
+        "start": "node dist/index.js",
         "lint": "eslint 'src/**/*.{js,ts}'",
         "lint:fix": "eslint 'src/**/*.{js,ts}' --fix",
         "format": "prettier --write 'src/**/*.{js,ts,json,md}'",
@@ -19,20 +19,24 @@
         "prisma:db:push": "prisma db push",
         "prisma:introspect": "prisma introspect",
         "prisma:studio": "prisma studio",
-        "prisma:seed": "prisma db seed"
+        "db:populate": "ts-node src/scripts/docker-entrypoint.sh"
     },
     "dependencies": {
         "@prisma/client": "^5.15.0",
+        "@types/bcrypt": "^5.0.2",
+        "bcrypt": "^5.1.1",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.1",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
+        "jsonwebtoken": "^9.0.2",
         "reflect-metadata": "^0.2.2"
     },
     "devDependencies": {
         "@eslint/js": "^9.4.0",
         "@types/cors": "^2.8.17",
         "@types/express": "^4.17.21",
+        "@types/jsonwebtoken": "^9.0.6",
         "@types/node": "^20.14.2",
         "@typescript-eslint/eslint-plugin": "^7.12.0",
         "@typescript-eslint/parser": "^7.12.0",

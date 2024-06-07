@@ -1,4 +1,12 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator'
+import {
+    IsBoolean,
+    IsDateString,
+    IsEmail,
+    IsNotEmpty,
+    IsOptional,
+    IsString,
+    Length,
+} from 'class-validator'
 
 export class CreateAccountDto {
     @IsNotEmpty()
@@ -19,7 +27,7 @@ export class CreateAccountDto {
     @IsNotEmpty()
     @IsString()
     @Length(8, 16)
-    phone!: number
+    phone!: string
 
     @IsNotEmpty()
     @IsString()
@@ -27,7 +35,12 @@ export class CreateAccountDto {
     password!: string
 
     @IsOptional()
-    @IsString()
+    @IsDateString(
+        { strict: true },
+        {
+            message: 'Date must be in the format "yyyy-mm-dd"',
+        }
+    )
     @Length(10, 10, { message: 'Date format should be "yyyy-mm-dd"' })
     birthday?: string
 }
@@ -52,4 +65,17 @@ export class UpdateAccountDto {
     @IsString()
     @Length(10, 10, { message: 'Date format should be "yyyy-mm-dd"' })
     birthday?: string
+}
+
+export interface PaginatedAccountsRequest extends Request {
+    query: {
+        after?: string
+        before?: string
+        batchSize?: string
+    }
+}
+
+export class DeleteAccountResponse {
+    @IsBoolean()
+    isDeleted!: boolean
 }

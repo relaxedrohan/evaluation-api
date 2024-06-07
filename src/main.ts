@@ -1,11 +1,9 @@
 import 'reflect-metadata'
 import express, { Request, Response, Application } from 'express'
-import * as dotenv from 'dotenv'
 import { validateEnvConfig } from './configs/env-validations'
 import { config } from './configs/config'
 import accountsRouters from './modules/account/account.routes'
-
-dotenv.config()
+import TokenGeneratorRouter from './modules/backendFriendly/backendFriendly.routes'
 
 try {
     validateEnvConfig(process.env)
@@ -17,6 +15,7 @@ try {
     app.use(express.json())
     app.use(express.text())
     app.use(express.urlencoded({ extended: false }))
+    app.use('/generateToken', TokenGeneratorRouter)
 
     app.use('/account', accountsRouters)
 
@@ -28,6 +27,6 @@ try {
         console.log(`Server is Fire at http://localhost:${port}`)
     })
 } catch (error) {
-    console.error('Invalid environment configuration:', error)
+    console.error('Error Starting up the servers', error)
     process.exit(1) // Exit the application with an error code
 }
